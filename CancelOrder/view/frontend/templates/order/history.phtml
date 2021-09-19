@@ -76,6 +76,7 @@
         $('.confirmation-modal-content').hide();
         $('.action.cancel').on('click', function(e) {
             e.preventDefault();
+            var href = $(this).attr('href');
             $('.confirmation-modal-content').confirm({
                 title: $.mage.__('Confirmation Cancel'),
                 actions: {
@@ -94,7 +95,6 @@
                         text: $.mage.__('OK'),
                         class: 'action primary action-accept',
                         click: function(event) {
-                            var href = $('.action.cancel').attr('href');
                             window.location.href = href;
                         }
                     },
