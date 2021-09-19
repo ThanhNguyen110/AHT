@@ -50,7 +50,7 @@
                                     <span><?= $block->escapeHtml(__('Reorder')) ?></span>
                                 </a>
                             <?php endif ?>
-                            <?php if ($_order->getStatus() == 'pending' || $_order->getStatus() == 'processing') : ?>
+                            <?php if (!in_array($_order->getStatus(), ['complete', 'closed', 'canceled'])) : ?>
                             <a href="<?= $this->getUrl('order/cancel/index') . '?orderid=' . $_order->getEntityId(); ?>" class="action cancel"><?= /* @escapeNotVerified */ __('Cancel') ?></a>
                             <?php endif; ?>
                         </td>
