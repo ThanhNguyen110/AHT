@@ -12,18 +12,22 @@ class Index extends \Magento\Framework\App\Action\Action
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Framework\View\Result\PageFactory $resultPageFactory,
-        \Magento\Sales\Model\Order $order
+        \Magento\Sales\Model\Order $order,
+        \Magento\Customer\Model\Session $customerSession
     ) {
         parent::__construct($context);
         $this->_resultPageFactory = $resultPageFactory;
         $this->_order = $order;
+        $this->_customerSession = $customerSession;
     }
 
     public function execute()
     {
         $orderId = $this->getRequest()->getParam('orderid');
         $order = $this->_order->load($orderId);
-        if ($order->hasData()) {
+        $customerId = $order->getCustomerId();
+        $currentCustomerId = $this->_customerSession->getCustomer()->getId();
+        if ($order->hasData() && $customerId == $currentCustomerId) {
             if ($order->canCancel()) {
                 $order->cancel();
                 $order->save();
