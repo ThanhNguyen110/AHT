@@ -23,13 +23,18 @@ class Index extends \Magento\Framework\App\Action\Action
     {
         $orderId = $this->getRequest()->getParam('orderid');
         $order = $this->_order->load($orderId);
-        if ($order->canCancel()) {
-            $order->cancel();
-            $order->save();
-            $this->messageManager->addSuccessMessage(__('Order has been canceled successfully.'));
+        if ($order->hasData()) {
+            if ($order->canCancel()) {
+                $order->cancel();
+                $order->save();
+                $this->messageManager->addSuccessMessage(__('Order has been canceled successfully.'));
+            } else {
+                $this->messageManager->addErrorMessage(__('Order cannot be canceled.'));
+            }
         } else {
-            $this->messageManager->addErrorMessage(__('Order cannot be canceled.'));
+            $this->messageManager->addWarningMessage(__('Order does not exist.'));
         }
+
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         $resultRedirect->setPath($this->_redirect->getRefererUrl());
         return $resultRedirect;
